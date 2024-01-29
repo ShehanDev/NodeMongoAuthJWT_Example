@@ -7,9 +7,9 @@ import db from "./models/index.js";
 
 dotenv.config();
 const app = express();
-
 const CONNECTION_URL = process.env.dbConfig;
 const PORT = process.env.PORT || 4000;
+const Role = db.role;
 
 // Configure CORS options to allow requests only from the specified origin
 const allowedOrigins = [
@@ -39,6 +39,8 @@ db.mongoose
   .connect(CONNECTION_URL)
   .then(() => {
     console.log("Successfully connect to MongoDB.");
+    //create default roles
+    initCreateroles();
   })
   .catch((err) => {
     console.error("Connection error", err);
@@ -53,3 +55,22 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+//creating basic roles
+async function initCreateroles() {
+  try {
+    const count = await Role.estimatedDocumentCount();
+
+    if (count === 0) {
+      await Promise.all([
+        new Role({ name: "user" }).save(),
+        new Role({ name: "moderator" }).save(),
+        new Role({ name: "admin" }).save(),
+      ]);
+
+      console.log("Default roles created successfully.");
+    }
+  } catch (error) {
+    console.error("Error creating roles", error);
+  }
+}
