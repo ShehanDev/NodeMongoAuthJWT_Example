@@ -6,25 +6,29 @@ const User = db.user;
 const Role = db.role;
 
 //sign up
-const signUp = async (req, res) => {
+export const signUp = async (req, res) => {
   try {
-    const user = new User({
+    let user = new User({
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
     });
+    await user.save();
     if (req.body.roles) {
       const roles = await Role.find({ name: { $in: req.body.roles } });
+      //console.log(roles);
 
-      user.roles = roles.map((role) => role._id);
+      user.role = roles.map((role) => role._id);
+      //console.log(user.roles);
       await user.save();
     } else {
       const role = await Role.findOne({ name: "user" });
 
-      user.roles = [role._id];
+      user.role = [role._id];
+
       await user.save();
     }
-
+    console.log(user);
     res.status(200).send({ message: "User was registered successfully!" });
   } catch (err) {
     res.status(500).send({ message: err.message || "Internal Server Error" });
@@ -32,7 +36,7 @@ const signUp = async (req, res) => {
 };
 
 // Controller function to handle user signin
-export const signin = async (req, res) => {
+export const signIn = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username })
       .populate("roles", "-__v")

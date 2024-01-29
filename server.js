@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import db from "./models/index.js";
+import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
 const app = express();
@@ -50,7 +51,8 @@ db.mongoose
 app.get("/", (req, res) => {
   res.json({ message: "Auth app Works" });
 });
-//console.log(process.env.PORT);
+
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

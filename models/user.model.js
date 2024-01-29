@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const User = mongoose.model(
   "User",
   mongoose.Schema({
-    userName: String,
+    username: String,
     email: String,
+    password: String,
     role: [
       {
         type: mongoose.Schema.Types.ObjectId,
