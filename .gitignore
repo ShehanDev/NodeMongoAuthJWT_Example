@@ -1,0 +1,24 @@
+*.sublime-workspace
+*.komodoproject
+.vscode/
+.idea/
+
+# Node.js
+node_modules/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Log files
+logs/
+*.log
+
+# Environment variables
+.env
